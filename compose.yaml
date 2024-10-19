@@ -1,0 +1,29 @@
+services:
+#  server:
+#    build:
+#      context: .
+#    ports:
+#      - 8080:8080  #application server port
+#    depends_on:
+#      db:  #DB configuration
+#        condition: service_healthy
+#    environment:
+#      - POSTGRES_URL=jdbc:postgresql://db:5432/shopperzaar
+  db:
+    image: postgres
+    restart: always
+    volumes: #persistence volume for using the created tables and data on restart.
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=shopperzaar
+      - POSTGRES_USER=shopperzaar
+      - POSTGRES_PASSWORD=shopperzaar
+    ports:
+      - 64000:64000
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "shopperzaar" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+volumes:
+  db-data:
